@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-git/go-git/v5"
+	"io"
 	"log"
 	"os"
 )
@@ -39,4 +40,36 @@ func CloneIcons(path string, url string) {
 	} else {
 		fmt.Println("cloned icon repository to", path)
 	}
+}
+
+// copyFile the source file contents to destination
+// file attributes wont be copied and an existing file will be overwritten.
+func copyFile(src, dst string) error {
+	in, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		if errClose := in.Close(); errClose != nil {
+			fmt.Println(errClose)
+		}
+	}()
+
+	out, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+
+	_, err = io.Copy(out, in)
+	if err != nil {
+		return err
+	}
+
+	err = out.Close()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

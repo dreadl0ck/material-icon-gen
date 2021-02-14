@@ -35,7 +35,7 @@ func GenerateIconsPNG(path, url string, hook func(newBase string, color string))
 			newPath = newBase + ".png"
 		)
 
-		err = os.Rename(oldPath, newPath)
+		err = copyFile(oldPath, newPath)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -68,7 +68,7 @@ func GenerateAdditionalIcons(path string, subset map[string]string, hook func(ne
 				newPath = newBase + ".png"
 			)
 
-			err = os.Rename(oldPath, newPath)
+			err = copyFile(oldPath, newPath)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -114,7 +114,7 @@ func GenerateSizes(newBase string, newPath string) {
 	}
 }
 
-func GenerateIcon(text string) {
+func GenerateIconPNG(path string, text string) {
 
 	var (
 		name = strings.ReplaceAll(text, "/", "")
@@ -123,7 +123,7 @@ func GenerateIcon(text string) {
 
 	//fmt.Println(name)
 
-	im, err := gg.LoadPNG("/tmp/icons/material-icons-png/renamed/check_box_outline_blank.png")
+	im, err := gg.LoadPNG(filepath.Join(path, "renamed/check_box_outline_blank.png"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -161,7 +161,7 @@ func GenerateIcon(text string) {
 	dc.Clip()
 
 	var (
-		imgBase = filepath.Join("/tmp", "icons", "material-icons-png", "renamed", name)
+		imgBase = filepath.Join(path, "renamed", name)
 		imgPath = imgBase + ".png"
 	)
 

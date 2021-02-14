@@ -78,7 +78,7 @@ func GenerateIconsSVG(path string, url string, sizes []int, coloredIcons map[str
 			newPath = newBase + ".svg"
 		)
 
-		err = os.Rename(oldPath, newPath)
+		err = copyFile(oldPath, newPath)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -118,7 +118,7 @@ func GenerateAdditionalIconsSVG(path string, sizes []int, subset map[string]stri
 				newPath = newBase + ".svg"
 			)
 
-			err = os.Rename(oldPath, newPath)
+			err = copyFile(oldPath, newPath)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -186,7 +186,7 @@ func GenerateSizesSVG(newBase string, newPath string, color string, sizes []int)
 	}
 }
 
-func GenerateIconSVG(text string, sizes []int) string {
+func GenerateIconSVG(path string, text string, sizes []int) string {
 
 	var (
 		name = strings.ReplaceAll(text, "/", "")
@@ -203,7 +203,7 @@ func GenerateIconSVG(text string, sizes []int) string {
 	)
 
 	var (
-		imgBase = filepath.Join("/tmp", "icons", "material-icons", "renamed", name)
+		imgBase = filepath.Join(path, "renamed", name)
 		imgPath = imgBase + ".svg"
 	)
 
