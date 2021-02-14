@@ -31,7 +31,7 @@ func CloneIcons(path string, url string) {
 		}
 
 		err = w.Pull(&git.PullOptions{})
-		if err != nil {
+		if err != nil && !errors.Is(err, git.NoErrAlreadyUpToDate){
 			log.Fatal(err)
 		}
 	} else if err != nil {
