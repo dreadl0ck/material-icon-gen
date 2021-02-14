@@ -3,9 +3,7 @@ package material_icon_gen
 import (
 	"bytes"
 	"encoding/xml"
-	"errors"
 	"fmt"
-	"gopkg.in/src-d/go-git.v4"
 	"io"
 	"io/ioutil"
 	"log"
@@ -59,28 +57,14 @@ func (s *MaterialIconSVG) ResizeSVG(width, height int) {
 	s.Width = strconv.Itoa(width)
 }
 
-func CloneIconsSVG() {
-	_ = os.RemoveAll(svgIconPath)
 
-	_, err := git.PlainClone(svgIconPath, false, &git.CloneOptions{
-		URL:      "https://github.com/dreadl0ck/material-icons.git",
-		Progress: os.Stdout,
-	})
-
-	if err != nil && !errors.Is(err, git.ErrRepositoryAlreadyExists) {
-		log.Fatal(err)
-	}
-
-	fmt.Println("cloned icon repository to", svgIconPath)
-}
-
-func GenerateIconsSVG(sizes []int, coloredIcons map[string][]string, hook func(newBase string, color string)) {
-	CloneIconsSVG()
+func GenerateIconsSVG(path string, url string, sizes []int, coloredIcons map[string][]string, hook func(newBase string, color string)) {
+	CloneIcons(path, url)
 
 	// rename icons
-	_ = os.Mkdir(filepath.Join(svgIconPath, "renamed"), 0o700)
+	_ = os.Mkdir(filepath.Join(path, "renamed"), 0o700)
 
-	files, err := ioutil.ReadDir(filepath.Join(svgIconPath, "svg"))
+	files, err := ioutil.ReadDir(filepath.Join(path, "svg"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -89,8 +73,8 @@ func GenerateIconsSVG(sizes []int, coloredIcons map[string][]string, hook func(n
 		// fmt.Println(f.Name())
 
 		var (
-			oldPath = filepath.Join(svgIconPath, "svg", filepath.Base(f.Name()), "twotone.svg")
-			newBase = filepath.Join(svgIconPath, "renamed", filepath.Base(f.Name()))
+			oldPath = filepath.Join(path, "svg", filepath.Base(f.Name()), "twotone.svg")
+			newBase = filepath.Join(path, "renamed", filepath.Base(f.Name()))
 			newPath = newBase + ".svg"
 		)
 
@@ -117,8 +101,8 @@ func GenerateIconsSVG(sizes []int, coloredIcons map[string][]string, hook func(n
 	}
 }
 
-func GenerateAdditionalIconsSVG(sizes []int, subset map[string]string, hook func(newBase string, color string)) {
-	files, err := ioutil.ReadDir(filepath.Join(svgIconPath, "svg"))
+func GenerateAdditionalIconsSVG(path string, sizes []int, subset map[string]string, hook func(newBase string, color string)) {
+	files, err := ioutil.ReadDir(filepath.Join(path, "svg"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -129,8 +113,8 @@ func GenerateAdditionalIconsSVG(sizes []int, subset map[string]string, hook func
 			// fmt.Println(f.Name())
 
 			var (
-				oldPath = filepath.Join(svgIconPath, "svg", filepath.Base(f.Name()), imgType+".svg")
-				newBase = filepath.Join(svgIconPath, "renamed", filepath.Base(f.Name())+"_"+imgType)
+				oldPath = filepath.Join(path, "svg", filepath.Base(f.Name()), imgType+".svg")
+				newBase = filepath.Join(path, "renamed", filepath.Base(f.Name())+"_"+imgType)
 				newPath = newBase + ".svg"
 			)
 

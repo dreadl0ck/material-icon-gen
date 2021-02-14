@@ -15,13 +15,13 @@ import (
 	"strings"
 )
 
-func GenerateIcons(hook func(newBase string, color string)) {
-	CloneIcons()
+func GenerateIconsPNG(path, url string, hook func(newBase string, color string)) {
+	CloneIcons(path, url)
 
 	// rename icons
-	_ = os.Mkdir(filepath.Join(pngIconPath, "renamed"), 0o700)
+	_ = os.Mkdir(filepath.Join(path, "renamed"), 0o700)
 
-	files, err := ioutil.ReadDir(filepath.Join(pngIconPath, "png", "black"))
+	files, err := ioutil.ReadDir(filepath.Join(path, "png", "black"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -30,8 +30,8 @@ func GenerateIcons(hook func(newBase string, color string)) {
 		// fmt.Println(f.Name())
 
 		var (
-			oldPath = filepath.Join(pngIconPath, "png", "black", filepath.Base(f.Name()), "twotone-4x.png")
-			newBase = filepath.Join(pngIconPath, "renamed", filepath.Base(f.Name()))
+			oldPath = filepath.Join(path, "png", "black", filepath.Base(f.Name()), "twotone-4x.png")
+			newBase = filepath.Join(path, "renamed", filepath.Base(f.Name()))
 			newPath = newBase + ".png"
 		)
 
@@ -51,8 +51,8 @@ func GenerateIcons(hook func(newBase string, color string)) {
 
 // this will generate a subset of the icons with a different imgType
 // call after generateIcons, the image repo needs to be present
-func GenerateAdditionalIcons(subset map[string]string, hook func(newBase string, color string)) {
-	files, err := ioutil.ReadDir(filepath.Join(pngIconPath, "png", "black"))
+func GenerateAdditionalIcons(path string, subset map[string]string, hook func(newBase string, color string)) {
+	files, err := ioutil.ReadDir(filepath.Join(path, "png", "black"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -63,8 +63,8 @@ func GenerateAdditionalIcons(subset map[string]string, hook func(newBase string,
 			//fmt.Println(f.Name())
 
 			var (
-				oldPath = filepath.Join(pngIconPath, "png", "black", filepath.Base(f.Name()), imgType+"-4x.png")
-				newBase = filepath.Join(pngIconPath, "renamed", filepath.Base(f.Name())+"_"+imgType)
+				oldPath = filepath.Join(path, "png", "black", filepath.Base(f.Name()), imgType+"-4x.png")
+				newBase = filepath.Join(path, "renamed", filepath.Base(f.Name())+"_"+imgType)
 				newPath = newBase + ".png"
 			)
 
