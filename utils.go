@@ -20,7 +20,7 @@ func CloneIcons(path string, url string) {
 		Progress: os.Stdout,
 	})
 	if errors.Is(err, git.ErrRepositoryAlreadyExists) {
-		fmt.Println("repo exists, pulling")
+		fmt.Println("material icon repository exists, pulling")
 		r, err := git.PlainOpen(path)
 		if err != nil {
 			log.Fatal(err)
@@ -38,7 +38,7 @@ func CloneIcons(path string, url string) {
 	} else if err != nil {
 		log.Fatal(err)
 	} else {
-		fmt.Println("cloned icon repository to", path)
+		fmt.Println("cloned material icon repository to", path)
 	}
 }
 
